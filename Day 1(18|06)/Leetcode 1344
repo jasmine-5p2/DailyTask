@@ -1,0 +1,113 @@
+344. Angle Between Hands of a Clock
+Given two numbers, hour and minutes, return the smaller angle (in degrees) formed between the hour and the minute hand.
+Answers within 10-5 of the actual value will be accepted as correct
+
+1. Clock Basics
+Full circle = 360°
+Clock has 12 hours
+Clock has 60 minutes
+
+2. Minute Hand
+Minute hand completes one full rotation in 60 minutes.
+
+Formula:
+minuteAngle = minutes * 6;
+
+3.Hour Hand
+Hour hand completes one full rotation in 12 hours.
+360° / 12 = 30° per hour
+But the hour hand moves continuously.
+30° / 60 = 0.5° per minute
+Final formula:
+hourAngle = (hour % 12) * 30 + minutes * 0.5;
+
+4. Angle Between Hands
+Find absolute difference:
+diff = Math.abs(hourAngle - minuteAngle);
+
+5.Smaller Angle
+There are always two angles:
+diff=360 - diff
+Take the smaller one:
+Math.min(diff, 360 - diff);
+
+Common Mistakes
+❌ Using
+hourAngle = hour * 30 + minutes * 6;
+6°/minute is for the minute hand, not the hour hand.
+❌ Returning only
+Math.abs(hourAngle - minuteAngle);
+Need the smaller angle:
+Math.min(diff, 360 - diff);
+❌ Forgetting % 12
+15:00 -> 3 PM
+15 % 12 = 3
+Use:
+(hour % 12)
+
+One-Line Formula:
+double minuteAngle = minutes * 6;
+double hourAngle = (hour % 12) * 30 + minutes * 0.5;
+double diff = Math.abs(hourAngle - minuteAngle);
+return Math.min(diff, 360 - diff);
+
+Interview Thought Process
+1. Find minute hand position.
+2. Find hour hand position.
+3. Compute absolute difference.
+4. Return smaller of diff and (360 - diff).
+
+
+remember:
+double hourangle = (hour % 12) * 30 + minutes * 6;
+You used:
+minutes * 6
+But 6° per minute is for the minute hand, not the hour hand.
+The hour hand moves:
+30° per hour
+30° in 60 minutes
+=> 30/60 = 0.5° per minute
+So it should be:
+double hourangle = (hour % 12) * 30 + minutes * 0.5;
+
+why % why not /
+check 15/12=1 but it is 3pm so 15%12=3
+
+Easy way to remember
+"How many degrees does each hand move in one minute?"
+Minute hand:
+360° / 60 = 6° per minute
+
+Hour hand:
+360° / (12 × 60) = 0.5° per minute
+
+double minuteAngle;   // Position of minute hand
+double hourAngle;     // Position of hour hand
+double diff;          // Difference between the two angles
+
+double minuteAngle = minutes * 6;
+Angle of the minute hand from 12 o'clock.
+Example: 30 minutes → 180°.
+
+double hourAngle = (hour % 12) * 30 + minutes * 0.5;
+Angle of the hour hand from 12 o'clock.
+Example: 3:30 → 105°.
+
+double diff = Math.abs(hourAngle - minuteAngle);
+Distance between the two hands.
+
+return Math.min(diff, 360 - diff);
+Returns the smaller angle.
+
+6    -> minute hand moves 6° per minute
+30   -> hour hand moves 30° per hour
+0.5  -> hour hand moves 0.5° per minute
+360  -> full circle
+12   -> clock hours
+60   -> clock minutes
+
+
+
+
+
+
