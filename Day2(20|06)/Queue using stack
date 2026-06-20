@@ -1,0 +1,73 @@
+To implement a queue using a stack:
+1. We have to take two stacks. In the first stack, we have to push all the elements.
+2. We will pop all the elements from the first stack and push them to the second stack.
+3. Till the second stack is empty, we will pop all the elements from the second stack.
+This is how we print a queue using a stack.
+
+import java.util.*;
+
+class Main{
+    public static void main(String args[]){
+        int arr[] = {1,2,3,4,5,6,7};
+
+       Stack<Integer> s1 = new Stack<>();
+       Stack<Integer>s2 = new Stack<>();
+
+       for(int a:arr){
+        s1.push(a);
+       }
+       while(!s1.isEmpty()){
+        s2.push(s1.pop());
+       }
+       while (!s2.isEmpty()) {
+        System.out.print(s2.pop()+" ");
+        
+       }
+
+
+        }
+
+
+}
+
+
+
+To implement a queue using a single  stack, we use stack + recursion.
+ static int dequeue(Stack<Integer> stack) {
+        int top = stack.pop();
+
+        if (stack.isEmpty()) {
+            return top;
+        }
+
+        int result = dequeue(stack);
+        stack.push(top);
+        return result;
+    }   
+
+
+
+To implement a stack using a queue. Generally, in a queue we can access elements from the front and back, 
+which means rear, but basically in a queue there is no option called rear. There is only the poll and peek.
+That's it. We do not have access to the rear one, but to access that we use a double-ended queue (dq).
+What are the methods we have? By using peek first and peek last, we can access the first and the last elements 
+of the stack using the dq double-ended queue to implement a stack using a queue. 
+
+In a Queue (FIFO)
+You can normally:
+
+Insert at the rear (back) → offer() / add()
+Remove from the front → poll() / remove()
+Peek at the front → peek()
+
+If you need both front and rear
+Use a Deque (Double Ended Queue):
+
+Deque<Integer> dq = new LinkedList<>();
+
+dq.offerLast(10);
+dq.offerLast(20);
+dq.offerLast(30);
+
+System.out.println(dq.peekFirst()); // 10
+System.out.println(dq.peekLast());  // 30
