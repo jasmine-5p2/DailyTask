@@ -1,0 +1,91 @@
+To implement the minimum stack 
+the first step is we will push every element from the array into the normal stack. We have another stack, the minimum stack, into which we will check the first condition:
+- If the stack was empty, then we will push the current element into the stack.
+- If not, if the current element is less than or equal to the peak element in the minimum stack, then we will push the element into the minimum stack.
+ This is how we construct the minimum stack. 
+ Next is the complete minimum stack that works as a normal stack. For that, what we do is, while popping up the elements, we check if the element in both the stacks is equal or not.
+ This means we check if the minimum element in the stack is equal to the minimum element, sorry, if the element is similar or not.
+ This means that if the top element in the stack and the top element in the minimum stack are equal, then we pop both the elements.
+Let's say we are having 5, 3, 2,6 and we are having 5, 3, 2. Now, here the elements are not the same.
+The top elements are not the same, so what we do is we will only pop the element from the stack.
+Next, we are having in stack 5, 3, 2, and in the minimum stack we are having 5, 3, 2. Now we will pop an element 
+from both the minimum stack and also the stack so that it will be completely acting as a normal stack. 
+
+import java.util.Stack;
+
+class MinStack {
+
+    private Stack<Integer> stack;
+    private Stack<Integer> minStack;
+
+    public MinStack() {
+        stack = new Stack<>();
+        minStack = new Stack<>();
+    }
+
+    public void push(int val) {
+        stack.push(val);
+
+        if (minStack.isEmpty() || val <= minStack.peek()) {
+            minStack.push(val);
+        }
+    }
+
+    public void pop() {
+        if (stack.isEmpty()) {
+            throw new RuntimeException("Stack is empty");
+        }
+
+        if (stack.peek().equals(minStack.peek())) {
+            minStack.pop();
+        }
+
+        stack.pop();
+    }
+
+    public int top() {
+        if (stack.isEmpty()) {
+            throw new RuntimeException("Stack is empty");
+        }
+
+        return stack.peek();
+    }
+
+    public int getMin() {
+        if (minStack.isEmpty()) {
+            throw new RuntimeException("Stack is empty");
+        }
+
+        return minStack.peek();
+    }
+
+    public void display() {
+        System.out.println("Stack    : " + stack);
+        System.out.println("MinStack : " + minStack);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        MinStack ms = new MinStack();
+
+        ms.push(5);
+        ms.push(3);
+        ms.push(7);
+        ms.push(2);
+        ms.push(6);
+
+        ms.display();
+
+        System.out.println("Minimum = " + ms.getMin()); // 2
+
+        ms.pop(); // removes 6
+        System.out.println("Minimum = " + ms.getMin()); // 2
+
+        ms.pop(); // removes 2
+        System.out.println("Minimum = " + ms.getMin()); // 3
+
+        System.out.println("Top = " + ms.top()); // 7
+    }
+}
