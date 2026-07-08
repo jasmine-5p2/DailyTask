@@ -1,0 +1,75 @@
+3756. Concatenate Non-Zero Digits and Multiply by Sum II
+Example 1:
+
+Input: s = "10203004", queries = [[0,7],[1,3],[4,6]]
+
+Output: [12340, 4, 9]
+
+class Solution {
+    static final int MOD = 1_000_000_007;
+
+    public int[] sumAndMultiply(String s, int[][] queries) {
+        int n = s.length();
+
+        long[] prefixSum = new long[n + 1];
+
+        // prefixConcat[i] = concatenation of all non-zero digits till i-1
+        long[] prefixConcat = new long[n + 1];
+
+        // number of non-zero digits till i-1
+        int[] nonZeroCount = new int[n + 1];
+
+        // powers of 10
+        long[] pow10 = new long[n + 1];
+        pow10[0] = 1;
+
+        for (int i = 1; i <= n; i++)
+            pow10[i] = (pow10[i - 1] * 10) % MOD;
+
+        for (int i = 0; i < n; i++) {
+
+            int digit = s.charAt(i) - '0';
+
+            prefixSum[i + 1] = prefixSum[i] + digit;
+
+            nonZeroCount[i + 1] = nonZeroCount[i];
+
+            prefixConcat[i + 1] = prefixConcat[i];
+
+            if (digit != 0) {
+                prefixConcat[i + 1] =
+                        (prefixConcat[i] * 10 + digit) % MOD;
+                nonZeroCount[i + 1]++;
+            }
+        }
+
+        int[] ans = new int[queries.length];
+
+        for (int i = 0; i < queries.length; i++) {
+
+            int l = queries[i][0];
+            int r = queries[i][1];
+
+            long sum = prefixSum[r + 1] - prefixSum[l];
+
+            int digits =
+                    nonZeroCount[r + 1] - nonZeroCount[l];
+
+            long left =
+                    prefixConcat[l];
+
+            long right =
+                    prefixConcat[r + 1];
+
+            // Remove left contribution
+            long concat =
+                    (right -
+                     (left * pow10[digits]) % MOD +
+                     MOD) % MOD;
+
+            ans[i] = (int) ((concat * (sum % MOD)) % MOD);
+        }
+
+        return ans;
+    }
+}
