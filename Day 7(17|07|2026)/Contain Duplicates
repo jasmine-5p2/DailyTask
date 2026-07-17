@@ -1,0 +1,51 @@
+->array brute force
+ first, we have to find the maximum. After finding the maximum,
+we create an array with the maximum + 1 in length, and we loop the given array. 
+For example, at index 2, the count of 2 will be stored. For example, let's say the maximum is 3.
+The array size will be 3, and at index 2, the frequency will be stored as 3. 
+
+class Solution {
+    public boolean hasDuplicate(int[] nums) {
+        int max = Integer.MIN_VALUE;
+
+        for (int i = 0; i < nums.length; i++) {
+            max = Math.max(max, nums[i]);
+        }
+
+        int[] freq = new int[max + 1];
+
+        for (int i = 0; i < nums.length; i++) {
+            freq[nums[i]]++;
+            if (freq[nums[i]] > 1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+java.lang.ArrayIndexOutOfBoundsException: Index -100 out of bounds for length 1001
+means your array contains negative numbers, and you're trying to use them as indices.
+
+
+For example:
+int[] nums = {5, -100, 10};
+freq[nums[1]]++;   // freq[-100]++  ❌ Invalid index
+Array indices in Java must be between 0 and length - 1.
+
+
+class Solution {
+    public boolean hasDuplicate(int[] nums) {
+        HashSet<Integer>map = new HashSet<>();
+
+        for(int a:nums){
+            if(map.contains(a)){
+                return true;
+            }
+            map.add(a);
+        }
+        return false;
+        
+    }
+}
