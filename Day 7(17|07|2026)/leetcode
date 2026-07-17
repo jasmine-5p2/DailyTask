@@ -1,0 +1,131 @@
+GCD stands for Greatest Common Divisor (also called Greatest Common Factor (GCF) or Highest Common Factor (HCF)).
+
+It is the largest positive number that divides two or more numbers exactly (without leaving a remainder).
+
+Example:
+
+Numbers: 12 and 18
+Factors of 12: 1, 2, 3, 4, 6, 12
+Factors of 18: 1, 2, 3, 6, 9, 18
+Common factors: 1, 2, 3, 6
+GCD = 6
+
+So, GCD(12, 18) = 6.
+
+1. Count frequency of every number.
+
+2. For every divisor d
+      count how many numbers are divisible by d.
+
+3. Compute
+      pairsMultiple[d] = cnt*(cnt-1)/2.
+
+4. From largest divisor down to 1
+      exact[d]
+      = pairsMultiple[d]
+      - sum(exact[multiples])
+
+5. Build prefix counts of exact gcd values.
+
+
+
+import java.util.*;
+
+class Solution {
+    public int[] gcdValues(int[] nums, long[] queries) {
+
+        int max = 0;
+        for (int x : nums)
+            max = Math.max(max, x);
+
+        // Step 1: Frequency of each number
+        int[] freq = new int[max + 1];
+        for (int x : nums)
+            freq[x]++;
+
+        // Step 2: Count numbers divisible by d
+        int[] divisibleCount = new int[max + 1];
+
+        for (int d = 1; d <= max; d++) {
+            for (int multiple = d; multiple <= max; multiple += d) {
+                divisibleCount[d] += freq[multiple];
+            }
+        }
+
+        // Step 3 & 4:
+        // exactPairs[d] = number of pairs having gcd exactly d
+        long[] exactPairs = new long[max + 1];
+
+        for (int d = max; d >= 1; d--) {
+
+            long cnt = divisibleCount[d];
+            long pairs = cnt * (cnt - 1) / 2;
+
+            for (int multiple = d * 2; multiple <= max; multiple += d) {
+                pairs -= exactPairs[multiple];
+            }
+
+            exactPairs[d] = pairs;
+        }
+
+        // Step 5: Prefix sum of pair counts
+        long[] prefix = new long[max + 1];
+
+        for (int i = 1; i <= max; i++) {
+            prefix[i] = prefix[i - 1] + exactPairs[i];
+        }
+
+        // Step 6: Answer queries
+        int[] ans = new int[queries.length];
+
+        for (int i = 0; i < queries.length; i++) {
+
+            long target = queries[i] + 1; // 0-indexed query
+
+            int left = 1;
+            int right = max;
+
+            while (left < right) {
+
+                int mid = left + (right - left) / 2;
+
+                if (prefix[mid] >= target)
+                    right = mid;
+                else
+                    left = mid + 1;
+            }
+
+            ans[i] = left;
+        }
+
+        return ans;
+    }
+}
+
+
+nums
+   │
+   ▼
+Frequency Array
+   │
+   ▼
+Count numbers divisible by every divisor
+   │
+   ▼
+Compute pairs divisible by d
+(cnt*(cnt-1)/2)
+   │
+   ▼
+Remove larger multiples
+(Inclusion-Exclusion)
+   │
+   ▼
+exact GCD counts
+   │
+   ▼
+Prefix Sum
+   │
+   ▼
+Binary Search for each query
+
+6. Binary search prefix for each query.
