@@ -1,3 +1,4 @@
+-------------------------------------------
 06-07-2026
 ----------------------------------------
 1.Revision of the Airbnb Project 
@@ -6,7 +7,12 @@
    routes,react-route-dom
 3.Grid,z-index
 
+----------------------------------
 17 july 2026
 --------------------------------
 Contain duplicates, group anagrams, lead quote, question streak, question to some problem, valid anagrams 
 
+-----------------------
+18 july 2026
+------------------------
+leetcode(GCD),Top K freq elements(MAP,PQ),JS-notes 
