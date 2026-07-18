@@ -1,0 +1,44 @@
+Step 1: Understand what GCD means
+GCD is the largest number that divides both numbers exactly.
+Example:
+12 and 18
+Common divisors: 1, 2, 3, 6
+Greatest = 6
+
+Step 2: Notice the pattern (Euclidean Algorithm)
+Instead of checking every number, use this observation:
+GCD(a, b) = GCD(b, a % b)
+Keep replacing:
+a with b
+b with a % b
+Until b becomes 0.
+Example: 48 and 18
+
+a	  b	  a % b
+48	18   12
+18	12	  6
+12  6	    0
+When b = 0, answer is a = 6.
+
+class Solution {
+    public int findGCD(int[] nums) {
+        int a = Integer.MIN_VALUE;
+        int b = Integer.MAX_VALUE;
+
+        for(int i=0;i<nums.length;i++){
+            a = Math.max(a,nums[i]);
+            b = Math.min(b,nums[i]);
+
+        }
+        while(b!=0){
+            int mod = a%b;
+            a = b;
+            b = mod;
+        }
+
+        return a;
+
+
+        
+    }
+}
