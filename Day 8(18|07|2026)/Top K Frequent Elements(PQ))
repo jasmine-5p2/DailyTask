@@ -1,0 +1,20 @@
+---------------------------
+What is a Priority Queue?
+---------------------------
+A Priority Queue (PQ) is a special type of queue where elements are removed based on priority, not on insertion order.
+Java Priority Queue
+''Java's PriorityQueue is Min Heap by default.''
+int a[] = {2,12,34,89,2,4,3,90};
+        PriorityQueue<Integer>pq = new PriorityQueue<>();
+        for(int n:a){
+            pq.add(n);
+        }
+         while(!pq.isEmpty()){
+            System.out.println(pq.poll());
+        }
+2 2 3 4 12 34 89 90 
+=== Code Execution Successful ===
+------------------------------------------
+to print in desending order
+------------------------------------------
+ PriorityQueue<Integer>pq = new PriorityQueue<>(Collections.reverseOrder());
