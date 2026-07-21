@@ -1,0 +1,110 @@
+-----------**------------
+     prefix sum
+----------**-------------
+Case 1: Normal Prefix Sum (includes current element)
+
+prefix[i] = sum of elements from 0 to i
+------------------------------------------
+prefix[0] = nums[0];
+for (int i = 1; i < n; i++) {
+    prefix[i] = prefix[i - 1] + nums[i];
+}------------------------------------------------
+Notice we use nums[i] because we want to include the current element.
+
+Case 2: Prefix Product for "Product Except Self" (excludes current element)
+prefix[i] = product of elements before i
+prefix[0] = 1;
+----------------------------------------------
+for (int i = 1; i < n; i++) {
+    prefix[i] = prefix[i - 1] * nums[i - 1];
+}
+------------------------------------------------------
+Notice we use nums[i-1] because we want to exclude the current element.
+
+---------------
+Compare Both
+----------------
+Normal Prefix Sum
+prefix[i] = prefix[i-1] + nums[i]
+                     ↑
+             Include current
+Product Except Self Prefix
+prefix[i] = prefix[i-1] * nums[i-1]
+                     ↑
+             Exclude current
+
+
+--------**-------------
+       Suffix
+----------**-----------
+What is a Suffix?
+A suffix means everything to the right.
+Normal Suffix Sum (Includes Current Element)
+suffix[i] = sum from i to n-1
+
+------------------------------------
+suffix[n-1] = nums[n-1];
+
+for(int i=n-2; i>=0; i--){
+    suffix[i] = suffix[i+1] + nums[i];
+}
+--------------------------------------
+
+
+Suffix for Product Except Self (Excludes Current Element)
+suffix[i] = product of elements AFTER i
+suffix[i] = product of elements AFTER i
+
+suffix[i] = suffix[i+1] * nums[i+1];
+
+------------------------------------------------------
+Prefix = everything left of the wall → use i - 1
+Suffix = everything right of the wall → use i + 1
+
+// Product before current
+prefix[i] = prefix[i-1] * nums[i-1];
+
+// Product after current
+suffix[i] = suffix[i+1] * nums[i+1];
+--------------------------------------------------------
+
+Example 1:
+
+Input: nums = [1,2,4,6]
+
+Output: [48,24,12,8]
+
+
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int n=nums.length;
+      int ans[] = new int[n];
+      int prefix[] = new int[n];
+      int suffix[] = new int[n];
+
+      prefix[0]=1;
+      suffix[n-1]=1;
+
+      for(int i=1;i<n;i++)
+      {
+        prefix[i]=prefix[i-1]*nums[i-1];
+      }
+       for(int i=n-2;i>=0;i--)
+      {
+        suffix[i]=suffix[i+1]*nums[i+1];
+      }
+       for(int i=0;i<n;i++)
+      {
+        ans[i]=prefix[i]*suffix[i];
+      }
+
+      return ans;
+
+        
+    }
+}  
+
+
+
+
+             
