@@ -1,0 +1,462 @@
+class Solution {
+    public int maxActiveSectionsAfterTrade(String s) {
+
+        int ones = 0;
+        for (char c : s.toCharArray())
+            if (c == '1')
+                ones++;
+
+        String t = "1" + s + "1";
+
+        List<Character> ch = new ArrayList<>();
+        List<Integer> len = new ArrayList<>();
+
+        int i = 0;
+
+        while (i < t.length()) {
+            char c = t.charAt(i);
+            int j = i;
+
+            while (j < t.length() && t.charAt(j) == c)
+                j++;
+
+            ch.add(c);
+            len.add(j - i);
+
+            i = j;
+        }
+
+        int maxGain = 0;
+
+        for (i = 1; i < ch.size() - 1; i++) {
+
+            if (ch.get(i) == '1'
+                    && ch.get(i - 1) == '0'
+                    && ch.get(i + 1) == '0') {
+
+                maxGain = Math.max(maxGain,
+                        len.get(i - 1) + len.get(i + 1));
+            }
+        }
+
+        return ones + maxGain;
+    }
+
+
+# LeetCode 3499 - Maximize Active Section with Trade I
+## Intuition
+Instead of actually performing the trade, we calculate **how many extra `1`s** we can gain.
+A trade consists of:
+1. Convert one **`1` block surrounded by `0`s** into `0`s.
+2. Convert one **`0` block surrounded by `1`s** into `1`s.
+The goal is to maximize the total number of active (`1`) sections.
+---
+# Step 1: Count Existing `1`s
+
+``java
+int ones = 0;
+for (char c : s.toCharArray()) {
+    if (c == '1')
+        ones++;
+}
+```
+### Why?
+Suppose
+```
+s = 1000100
+```
+Already there are
+```
+2 ones
+```
+No matter which trade we perform, the final answer is
+```
+Existing Ones + Additional Ones Gained
+```
+So we first count the number of existing `1`s.
+---
+# Step 2: Add `1` at Both Ends
+```java
+String t = "1" + s + "1";
+```
+### Why?
+The problem states that we should treat the string as
+```
+t = "1" + s + "1"
+```
+Exmple
+```
+s = 0100
+t = 101001
+```
+This makes boundary cases easier because every zero block now has both a left and right neighbor.
+---
+# Step 3: Convert the String into Blocks (Run Length Encoding)
+Instead of processing every character individually, we group consecutive equal characters.
+Example
+```
+110001001
+```
+becomes
+| Character | Length |
+|-----------|--------|
+| 1 | 2 |
+| 0 | 3 |
+| 1 | 1 |
+| 0 | 2 |
+| 1 | 1 |
+We store these in two lists:
+
+```jav
+List<Character> ch = new ArrayList<>();
+List<Integer> len = new ArrayList<>();
+```
+Result
+```
+ch  = [1, 0, 1, 0, 1]
+len = [2, 3, 1, 2, 1]
+```
+---
+# Step 4: Build the Blocks
+```java
+int i = 0;
+while (i < t.length()) {
+
+    char c = t.charAt(i);
+    int j = i;
+
+    while (j < t.length() && t.charAt(j) == c)
+        j++;
+
+    ch.add(c);
+    len.add(j - i);
+
+    i = j;
+}
+```
+
+### How it Works
+
+Example
+
+```
+110001001
+```
+
+Start
+
+```
+i = 0
+```
+
+Current character
+
+```
+1
+```
+
+Move `j` until the character changes.
+
+```
+11
+ ^
+```
+
+Length
+
+```
+2
+```
+
+Store
+
+```
+Character = 1
+Length = 2
+```
+
+Continue for every block.
+
+Finally
+
+```
+Characters
+
+[1,0,1,0,1]
+
+Lengths
+
+[2,3,1,2,1]
+```
+
+This technique is called **Run Length Encoding (RLE).**
+
+---
+
+# Step 5: Find Every Removable `1` Block
+
+```java
+for (i = 1; i < ch.size() - 1; i++) {
+
+    if (ch.get(i) == '1'
+        && ch.get(i - 1) == '0'
+        && ch.get(i + 1) == '0') {
+
+        ...
+    }
+}
+```
+
+### Why?
+
+A removable block must look like
+
+```
+0 111 0
+```
+
+Only such blocks are allowed by the problem statement.
+
+---
+
+# Step 6: Calculate the Gain
+
+```java
+len.get(i - 1) + len.get(i + 1)
+```
+
+This is the most important observation.
+
+Suppose we have
+
+```
+00011100
+```
+
+Left zero block
+
+```
+3
+```
+
+One block
+
+```
+3
+```
+
+Right zero block
+
+```
+2
+```
+
+### Remove the One Block
+
+```
+00011100
+
+↓
+
+00000000
+```
+
+The three blocks merge into one zero block.
+
+Merged length
+
+```
+3 + 3 + 2 = 8
+```
+
+Now flip this merged zero block to ones.
+
+Gain
+
+```
+8
+```
+
+But we also removed
+
+```
+3 ones
+```
+
+Net increase
+
+```
+8 - 3 = 5
+```
+
+Notice
+
+```
+5 = 3(left zero) + 2(right zero)
+```
+
+The middle one block cancels out.
+
+Therefore
+
+```
+Net Gain = Left Zero Length + Right Zero Length
+```
+
+This is why the code never uses
+
+```java
+len.get(i)
+```
+
+The size of the removed one block does **not** affect the final gain.
+
+---
+
+# Step 7: Keep the Maximum Gain
+
+```java
+maxGain = Math.max(
+    maxGain,
+    len.get(i - 1) + len.get(i + 1)
+);
+```
+
+There may be multiple removable one blocks.
+
+We simply choose the one giving the maximum gain.
+
+---
+
+# Step 8: Return the Answer
+
+```java
+return ones + maxGain;
+```
+
+Example
+
+```
+Original Ones = 2
+
+Best Gain = 5
+
+Answer = 7
+```
+
+---
+
+# Dry Run
+
+Input
+
+```
+s = 1000100
+```
+
+### Step 1
+
+Count one``
+2
+
+### Step 2
+Augmented string
+```
+110001001
+### Step 3
+
+Blocks
+
+| Character | Length |
+|-----------|--------|
+| 1 | 2 |
+| 0 | 3 |
+| 1 | 1 |
+| 0 | 2 |
+| 1 | 1 |
+
+---
+### Step 4
+Check every `1` block.
+First block
+```
+1
+```
+No left zero block.
+Ignore.
+---
+Middle block
+```
+0 1 0
+```
+Gain
+```
+3 + 2 = 5
+```
+```
+maxGain = 5
+```
+---
+Last block
+No right zero block.
+Ignore.
+---
+### Final Answer
+```
+Original Ones = 2
+Gain = 5
+Answer = 7
+```
+---
+# Time Complexity
+### Counting Ones
+```
+O(n)
+```
+### Building Blocks
+```
+O(n)
+```
+### Traversing Blocks
+```
+O(n)
+```
+Overall
+```
+O(n)
+```
+---
+# Space Complexity
+The lists storing the blocks can contain at most `n` groups.
+```
+O(n)
+```
+---
+# Key Observation (Most Important)
+When we remove
+```
+00011100
+```
+it becomes
+```
+00000000
+```
+The left and right zero blocks merge with the removed one block.
+Therefore,
+```
+Merged Zero Length
+= Left Zero + One Block + Right Zero
+```
+After flipping,
+```
+Gain
+= (Left + One + Right) - One
+= Left + Right
+```
+So the **net increase** depends **only** on the neighboring zero blocks.
+> **Final Formula**
+```
+Answer = Original Ones + Maximum(Left Zero Length + Right Zero Length)
+```
+This observation allows us to solve the problem in **O(n)** time without actually modifying the string.
+}
