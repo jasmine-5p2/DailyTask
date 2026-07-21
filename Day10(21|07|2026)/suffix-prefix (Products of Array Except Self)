@@ -106,5 +106,15 @@ class Solution {
 
 
 
+**********************************************************************
+The value you initialize with is called the identity element (the value that doesn't change the result).
+
+Operation	Identity Value	Why?
+Product	1	x × 1 = x
+Sum	0	x + 0 = x
+XOR	0	x ^ 0 = x
+AND	~0 (all bits = 1)	x & 111... = x
+OR	0	x | 0 = x
+**************************************************************************
 
              
