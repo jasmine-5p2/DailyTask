@@ -1,0 +1,323 @@
+class Solution {
+    public boolean isPalindrome(String s) {
+        String st = s.replaceAll("[^a-zA-Z0-9]","").toLowerCase();
+        String sb = new StringBuilder(st).reverse().toString().toLowerCase();
+        System.out.println(st);
+         System.out.println(sb);
+        return st.equals(sb);
+    }
+}
+
+
+| Requirement                | Regex             |
+| -------------------------- | ----------------- |
+| Remove spaces              | `\\s`             |
+| Remove digits              | `\\d`             |
+| Keep only digits           | `[^0-9]`          |
+| Keep only letters          | `[^a-zA-Z]`       |
+| Keep only letters + digits | `[^a-zA-Z0-9]`    |
+| Remove punctuation         | `[^a-zA-Z0-9\\s]` |
+| Remove `+ - * / ?`         | `[+\\-*/?]`       |
+
+
+
+| Regex          | Meaning                                  |
+| -------------- | ---------------------------------------- |
+| `a-z`          | Lowercase letters (`a` to `z`)           |
+| `A-Z`          | Uppercase letters (`A` to `Z`)           |
+| `0-9`          | Digits (`0` to `9`)                      |
+| `a-zA-Z`       | All letters                              |
+| `a-zA-Z0-9`    | Letters + digits (alphanumeric)          |
+| `[^a-zA-Z0-9]` | Everything **except** letters and digits |
+| `\\s`          | Whitespace (space, tab, newline, etc.)   |
+| `\\S`          | Non-whitespace                           |
+| `\\d`          | Digit (`0-9`)                            |
+| `\\D`          | Non-digit                                |
+| `\\w`          | Word character (`a-zA-Z0-9_`)            |
+| `\\W`          | Non-word character                       |
+| `\\t`          | Tab character                            |
+| `\\n`          | Newline character                        |
+| `\\r`          | Carriage return                          |
+
+
+
+Memory Trick
+[] → these characters
+[^...] → everything except these characters
+\\d → digit
+\\D → not a digit
+\\s → space/whitespace
+\\S → not whitespace
+\\w → word character (a-zA-Z0-9_)
+\\W → not a word character
+
+
+
+
+# Java Regex Cheat Sheet (`replaceAll()`)
+
+## Rule 1: Character Ranges
+
+### Lowercase Letters
+
+```regex
+a-z
+```
+
+Matches:
+
+```text
+abcdefghijklmnopqrstuvwxyz
+```
+
+### Uppercase Letters
+
+```regex
+A-Z
+```
+
+Matches:
+
+```text
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+```
+
+### Digits
+
+```regex
+0-9
+```
+
+Matches:
+
+```text
+0123456789
+```
+
+---
+
+# Rule 2: Combine Ranges
+
+## All Letters
+
+```regex
+[a-zA-Z]
+```
+
+Matches:
+
+- Lowercase letters
+- Uppercase letters
+
+---
+
+## Letters + Digits (Alphanumeric)
+
+```regex
+[a-zA-Z0-9]
+```
+
+Matches:
+
+- a-z
+- A-Z
+- 0-9
+
+---
+
+# Rule 3: `^` Means "NOT" (Inside `[]`)
+
+```regex
+[^a-zA-Z0-9]
+```
+
+Read it as:
+
+> Match everything **except**
+>
+> - letters
+> - digits
+
+Example:
+
+```java
+s.replaceAll("[^a-zA-Z0-9]", "");
+```
+
+Meaning:
+
+> Remove everything except letters and numbers.
+
+Example:
+
+```text
+Input:
+"A man, a plan!"
+
+Output:
+Amanaplan
+```
+
+---
+
+# Remove Only Specific Symbols
+
+Suppose you want to remove:
+
+```text
++ - * / ?
+```
+
+Write them directly inside `[]`.
+
+```java
+s.replaceAll("[+\\-*/?]", "");
+```
+
+---
+
+# Remove Commas, Spaces, and Periods
+
+```java
+s.replaceAll("[,. ]", "");
+```
+
+Removes:
+
+- `,`
+- `.`
+- Space
+
+---
+
+# Keep Only Digits
+
+```regex
+[^0-9]
+```
+
+Read it as:
+
+> Remove everything except digits.
+
+Example:
+
+```java
+s.replaceAll("[^0-9]", "");
+```
+
+---
+
+# Keep Only Letters
+
+```regex
+[^a-zA-Z]
+```
+
+Read it as:
+
+> Remove everything except letters.
+
+Example:
+
+```java
+s.replaceAll("[^a-zA-Z]", "");
+```
+
+---
+
+# How to Think
+
+## Step 1
+
+Ask yourself:
+
+> **What do I want to KEEP?**
+
+---
+
+### Keep letters
+
+```regex
+[a-zA-Z]
+```
+
+---
+
+### Keep letters + digits
+
+```regex
+[a-zA-Z0-9]
+```
+
+---
+
+### Keep digits
+
+```regex
+[0-9]
+```
+
+---
+
+## Step 2
+
+If you want to remove everything else, put `^` inside `[]`.
+
+Examples:
+
+Keep letters:
+
+```java
+s.replaceAll("[^a-zA-Z]", "");
+```
+
+Keep digits:
+
+```java
+s.replaceAll("[^0-9]", "");
+```
+
+Keep letters + digits:
+
+```java
+s.replaceAll("[^a-zA-Z0-9]", "");
+```
+
+---
+
+# Quick Cheat Sheet
+
+| Requirement | Regex |
+|-------------|-------|
+| Lowercase letters | `a-z` |
+| Uppercase letters | `A-Z` |
+| Digits | `0-9` |
+| Letters | `[a-zA-Z]` |
+| Letters + Digits | `[a-zA-Z0-9]` |
+| Keep only letters | `[^a-zA-Z]` |
+| Keep only digits | `[^0-9]` |
+| Keep letters + digits | `[^a-zA-Z0-9]` |
+| Remove spaces | `\\s` |
+| Remove commas, periods, spaces | `[,. ]` |
+| Remove `+ - * / ?` | `[+\\-*/?]` |
+
+---
+
+# Memory Trick
+
+- `[]` → These characters
+- `[^...]` → Everything **except** these characters
+- `a-z` → Lowercase letters
+- `A-Z` → Uppercase letters
+- `0-9` → Digits
+- `\\d` → Digit
+- `\\D` → Not a digit
+- `\\s` → Whitespace
+- `\\S` → Not whitespace
+- `\\w` → Word character (`a-zA-Z0-9_`)
+- `\\W` → Not a word character
+
+## One-Line Rule
+
+> **First decide what you want to KEEP. Write those inside `[]`. Add `^` if you want to remove everything else.**
