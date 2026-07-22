@@ -52,272 +52,85 @@ Memory Trick
 \\W → not a word character
 
 
+Character.isDigit(ch)
+Character.isLetter(ch)
+Character.isLetterOrDigit(ch)
+Character.isWhitespace(ch)
 
+These methods are part of the Character class and are very useful when processing strings character by character.
 
-# Java Regex Cheat Sheet (`replaceAll()`)
 
-## Rule 1: Character Ranges
+| Task                              | Method                  |
+| --------------------------------- | ----------------------- |
+| Check a single character          | `Character.isDigit(ch)` |
+| Check if a string has only digits | `s.matches("\\d+")`     |
+| Convert to an integer             | `Integer.parseInt(s)`   |
+| LeetCode / DSA character checks   | `Character.isDigit(ch)` |
 
-### Lowercase Letters
+---------------------------------------------------------------------------------------------------------------------------------------
+                                                               Using Two Pointers
+----------------------------------------------------------------------------------------------------------------------------------------
 
-```regex
-a-z
-```
+class Solution {
+    public boolean isPalindrome(String s) {
+        String st = s.replaceAll("[^a-zA-Z0-9]","").toLowerCase();
+         int left =0;
+         int right = st.length()-1;
 
-Matches:
+         char[] arr = st.toCharArray();
 
-```text
-abcdefghijklmnopqrstuvwxyz
-```
+         while(left<right){
+            char ch = arr[left];
+            arr[left]= arr[right];
+            arr[right]= ch;
 
-### Uppercase Letters
+            left++;
+            right--;
 
-```regex
-A-Z
-```
+         }
+         String stt = new String(arr);
+         
+         return stt.equals(st);
+        
+    }
+}
 
-Matches:
 
-```text
-ABCDEFGHIJKLMNOPQRSTUVWXYZ
-```
+The error occurs because String is immutable in Java.
+charAt() returns a value, not a variable that you can assign to.
+For example:
+st.charAt(left) = st.charAt(right);   // ❌
+is like writing:
+'a' = 'b';    // ❌
+You cannot change a character inside a String.
 
-### Digits
 
-```regex
-0-9
-```
+If you want to swap characters, use a char[]
+char[] arr = st.toCharArray();
+------------------------------------
+char temp = arr[left];
+arr[left] = arr[right];
+arr[right] = temp;
 
-Matches:
+st = new String(arr);
+Or use StringBuilder
+-------------------------------------------------
+StringBuilder sb = new StringBuilder(st);
+char temp = sb.charAt(left);
+sb.setCharAt(left, sb.charAt(right));
+sb.setCharAt(right, temp);
 
-```text
-0123456789
-```
+st = sb.toString();
 
----
 
-# Rule 2: Combine Ranges
 
-## All Letters
 
-```regex
-[a-zA-Z]
-```
 
-Matches:
 
-- Lowercase letters
-- Uppercase letters
 
----
 
-## Letters + Digits (Alphanumeric)
 
-```regex
-[a-zA-Z0-9]
-```
 
-Matches:
 
-- a-z
-- A-Z
-- 0-9
 
----
 
-# Rule 3: `^` Means "NOT" (Inside `[]`)
-
-```regex
-[^a-zA-Z0-9]
-```
-
-Read it as:
-
-> Match everything **except**
->
-> - letters
-> - digits
-
-Example:
-
-```java
-s.replaceAll("[^a-zA-Z0-9]", "");
-```
-
-Meaning:
-
-> Remove everything except letters and numbers.
-
-Example:
-
-```text
-Input:
-"A man, a plan!"
-
-Output:
-Amanaplan
-```
-
----
-
-# Remove Only Specific Symbols
-
-Suppose you want to remove:
-
-```text
-+ - * / ?
-```
-
-Write them directly inside `[]`.
-
-```java
-s.replaceAll("[+\\-*/?]", "");
-```
-
----
-
-# Remove Commas, Spaces, and Periods
-
-```java
-s.replaceAll("[,. ]", "");
-```
-
-Removes:
-
-- `,`
-- `.`
-- Space
-
----
-
-# Keep Only Digits
-
-```regex
-[^0-9]
-```
-
-Read it as:
-
-> Remove everything except digits.
-
-Example:
-
-```java
-s.replaceAll("[^0-9]", "");
-```
-
----
-
-# Keep Only Letters
-
-```regex
-[^a-zA-Z]
-```
-
-Read it as:
-
-> Remove everything except letters.
-
-Example:
-
-```java
-s.replaceAll("[^a-zA-Z]", "");
-```
-
----
-
-# How to Think
-
-## Step 1
-
-Ask yourself:
-
-> **What do I want to KEEP?**
-
----
-
-### Keep letters
-
-```regex
-[a-zA-Z]
-```
-
----
-
-### Keep letters + digits
-
-```regex
-[a-zA-Z0-9]
-```
-
----
-
-### Keep digits
-
-```regex
-[0-9]
-```
-
----
-
-## Step 2
-
-If you want to remove everything else, put `^` inside `[]`.
-
-Examples:
-
-Keep letters:
-
-```java
-s.replaceAll("[^a-zA-Z]", "");
-```
-
-Keep digits:
-
-```java
-s.replaceAll("[^0-9]", "");
-```
-
-Keep letters + digits:
-
-```java
-s.replaceAll("[^a-zA-Z0-9]", "");
-```
-
----
-
-# Quick Cheat Sheet
-
-| Requirement | Regex |
-|-------------|-------|
-| Lowercase letters | `a-z` |
-| Uppercase letters | `A-Z` |
-| Digits | `0-9` |
-| Letters | `[a-zA-Z]` |
-| Letters + Digits | `[a-zA-Z0-9]` |
-| Keep only letters | `[^a-zA-Z]` |
-| Keep only digits | `[^0-9]` |
-| Keep letters + digits | `[^a-zA-Z0-9]` |
-| Remove spaces | `\\s` |
-| Remove commas, periods, spaces | `[,. ]` |
-| Remove `+ - * / ?` | `[+\\-*/?]` |
-
----
-
-# Memory Trick
-
-- `[]` → These characters
-- `[^...]` → Everything **except** these characters
-- `a-z` → Lowercase letters
-- `A-Z` → Uppercase letters
-- `0-9` → Digits
-- `\\d` → Digit
-- `\\D` → Not a digit
-- `\\s` → Whitespace
-- `\\S` → Not whitespace
-- `\\w` → Word character (`a-zA-Z0-9_`)
-- `\\W` → Not a word character
-
-## One-Line Rule
-
-> **First decide what you want to KEEP. Write those inside `[]`. Add `^` if you want to remove everything else.**
