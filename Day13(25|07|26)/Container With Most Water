@@ -1,0 +1,93 @@
+# Reason why 2 Pointer Approach Works
+
+The following diagram explains why the **Two Pointer Approach** works for the **Container With Most Water** problem.
+
+<p align="center">
+  <img src="./image(57).png" alt="Reason why 2 Pointer Approach Works" width="900"/>
+</p>
+
+## Explanation
+
+- **Initial Area (x):**
+  - Left Height = **4**
+  - Right Height = **7**
+  - Area = `min(4,7) × width = x`
+
+### Case 1
+- Move the **Right Pointer** to a shorter height (7 → 5).
+- Width decreases while minimum height does not increase enough.
+- **Area becomes smaller than x.**
+
+### Case 2
+- Move the **Right Pointer** to a taller height (7 → 9).
+- Width decreases.
+- Minimum height is still **4**.
+- **Area is still less than x.**
+
+### Case 3
+- If the left pointer is already the taller one, moving the taller pointer cannot improve the area.
+- Width decreases while limiting height remains unchanged.
+
+### Case 4
+- Move the **Left Pointer** (the shorter height).
+- There is a chance of finding a taller bar.
+- The minimum height may increase enough to compensate for the reduced width.
+- **This is the only move that can potentially produce a larger area.**
+
+## Conclusion
+
+**Always move the pointer with the smaller height.**
+
+Reason:
+- Moving the taller pointer always decreases the width without increasing the limiting height.
+
+# Two Pointer Algorithm
+
+## Algorithm
+
+```java
+int maxArea(int[] height) {
+    int lp = 0;
+    int rp = height.length - 1;
+    int maxWater = 0;
+
+    while (lp < rp) {
+        int ht = Math.min(height[lp], height[rp]);
+        int width = rp - lp;
+
+        int currWater = ht * width;
+        maxWater = Math.max(maxWater, currWater);
+
+        if (height[lp] < height[rp]) {
+            lp++;
+        } else {
+            rp--;
+        }
+    }
+
+    return maxWater;
+}
+```
+
+## Dry Run
+
+```
+while (lp < rp)
+
+Current Water = height × width
+
+height = min(height[lp], height[rp])
+width  = rp - lp
+
+if (height[lp] < height[rp])
+    lp++
+else
+    rp--
+```
+
+### Time Complexity
+- **O(n)**
+
+### Space Complexity
+- **O(1)**
+- Moving the shorter pointer is the only way to possibly increase the limiting height and obtain a larger area.
