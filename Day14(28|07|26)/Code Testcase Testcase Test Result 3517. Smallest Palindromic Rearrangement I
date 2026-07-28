@@ -1,0 +1,49 @@
+Rule to remember
+Use - 'a' when converting letters (a–z) into indexes 0–25.
+Use - '0' when converting digit characters ('0'–'9') into integers 0–9.
+*******************************
+to count using array numbers
+********************************
+int a[] = {2,2,2,2,3,3,3,1,1,1,4,4,4};
+        int f[] = new int[a.length+1];
+        for(int i=0;i<a.length;i++){
+            f[a[i]]++;
+        }
+*******************************
+to count using array characters
+********************************
+ int freq[] = new int[27];
+        //count
+        for(char ch : s.toCharArray()){
+            freq[ch-'a']++;
+        }
+********************
+     CODE
+******************
+
+class Solution {
+    public String smallestPalindrome(String s) {
+        int freq[] = new int[27];
+        //count
+        for(char ch : s.toCharArray()){
+            freq[ch-'a']++;
+        }
+        //left
+        StringBuilder left = new StringBuilder();
+        for(int i=0;i<26;i++){
+            for(int j=0;j<freq[i]/2;j++){
+                left.append((char)(i+'a'));
+            }
+        }
+        //middle
+        String middle = "";
+        for(int i=0;i<26;i++){
+            if(freq[i]%2==1){
+                middle = String.valueOf((char)(i+'a'));
+                break;
+            }
+        }
+       String right = new StringBuilder(left).reverse().toString();
+      return left.toString()+middle+right;  
+    }
+}
