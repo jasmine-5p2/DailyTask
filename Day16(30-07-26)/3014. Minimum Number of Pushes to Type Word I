@@ -1,0 +1,20 @@
+class Solution {
+    public int minimumPushes(String word) {
+        int ans = 0;
+
+        for (int i = 0; i < word.length(); i++) {
+            ans += (i / 8) + 1;
+        }
+
+        return ans;
+    }
+}
+
+Why does (i / 8) + 1 work?
+i         	i/8	                   Pushes
+0–7        	0	                        1
+8–15	      1	                        2
+16–23     	2                       	3
+24–25	      3	                        4
+
+So every block of 8 characters gets one extra required push.
